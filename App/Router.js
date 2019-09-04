@@ -1,32 +1,61 @@
 const express = require( 'express' )
+
+
 const webHandler = require('./Services/WebHandler')
+const cacheHandler = require('./Services/CacheHandler')
+const imageProcessor = require('./Services/ImageProcessor')
+
 
 const PORT = process.env.PORT || 5000
 const app = express()
 
 app.listen( PORT, () => {
-  console.log( 'Listening on port ', PORT )
+    console.log( 'Listening on port ', PORT )
 })
 
 
 app.get( '/', async ( req, res, next ) => {
-  res.writeHead( 200, {'Content-Type': 'text/plain'})
-  res.end( 'AnyGIS Image Processor' )
+    res.writeHead( 200, {'Content-Type': 'text/plain'})
+    res.end( 'AnyGIS Image Processor' )
 })
 
 
 
 app.get( '/test', async ( req, res, next ) => {
 
-  const imageBuffer = await webHandler.getContent('https://cdn.iconscout.com/icon/free/png-256/nodejs-6-569582.png')
+    const imageBuffer = await webHandler.getContent('https://cdn.iconscout.com/icon/free/png-256/nodejs-6-569582.png')
 
-	res.writeHead( 200, {
+    let processedImage = await imageProcessor.testFilter(imageBuffer)
+
+  	res.writeHead( 200, {
       'Content-Type': 'image/png',
-      'Content-Length': imageBuffer.length
+      'Content-Length': processedImage.length
     })
 
+    res.end(processedImage)
 
-	res.end(imageBuffer)
+})
+
+
+app.get( '/test1', async ( req, res, next ) => {
+
+    obj = { my: "Special", variable: 42 };
+
+    cacheHandler.save("myname", obj)
+
+    res.end("test1")
+
+})
+
+app.get( '/test2', async ( req, res, next ) => {
+
+    const obj = cacheHandler.load("myname")
+
+    console.log(obj)
+
+    //res.end(obj)
+
+    res.end("test2")
 
 })
 

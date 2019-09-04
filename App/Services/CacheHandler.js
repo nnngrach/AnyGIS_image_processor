@@ -1,15 +1,15 @@
 const NodeCache = require( "node-cache" )
 
-const storingTime = 60 //seconds
-//const storingTime = 86400 // 1 day in seconds
+//const storingTime = 60 //seconds
+const storingTime = 86400 // 1 day in seconds
+
 const myCache = new NodeCache( { stdTTL: storingTime, checkperiod: storingTime + 60 } )
 
 
 module.exports.save = function save(name, data) {
 
-	object = { isError: false, data: "Special"}
-
-	isSuccess = myCache.set( name, object )
+	const object = { isError: false, data: data}
+	const isSuccess = myCache.set( name, object )
 }
 
 

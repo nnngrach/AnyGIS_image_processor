@@ -1,7 +1,6 @@
 const express = require( 'express' )
+const webHandler = require('./Services/WebHandler')
 
-
-// Запуск сервера
 const PORT = process.env.PORT || 5000
 const app = express()
 
@@ -14,6 +13,24 @@ app.get( '/', async ( req, res, next ) => {
   res.writeHead( 200, {'Content-Type': 'text/plain'})
   res.end( 'AnyGIS Image Processor' )
 })
+
+
+
+app.get( '/test', async ( req, res, next ) => {
+
+  const imageBuffer = await webHandler.getContent('https://cdn.iconscout.com/icon/free/png-256/nodejs-6-569582.png')
+
+	res.writeHead( 200, {
+      'Content-Type': 'image/png',
+      'Content-Length': imageBuffer.length
+    })
+
+
+	res.end(imageBuffer)
+
+})
+
+
 
 
 

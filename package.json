@@ -2,9 +2,10 @@
   "name": "anygis_image_processor",
   "version": "1.0.0",
   "description": "Service for image processing",
-  "main": "index.js",
+  "main": "App/Main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+      "start": "node App/Main.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

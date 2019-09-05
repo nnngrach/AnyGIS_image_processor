@@ -45,6 +45,13 @@ app.post( '/move', async ( req, res, next ) => {
     const xOffset = req.body.xOffset
     const yOffset = req.body.yOffset
 
+    console.log(urlTL)
+    console.log(urlTR)
+    console.log(urlBR)
+    console.log(urlBL)
+    console.log(xOffset)
+    console.log(yOffset)
+
     if ( !urlTL ) return next( error( 400, 'No urlTL paramerer' ) )
     if ( !urlTR ) return next( error( 400, 'No urlTR paramerer' ) )
     if ( !urlBR ) return next( error( 400, 'No urlBR paramerer' ) )

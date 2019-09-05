@@ -20,6 +20,28 @@ module.exports.move = async function move(urlTL, urlTR, urlBR, urlBL, xOffset, y
 
 // not work
 
+module.exports.overlay = async function overlay(urlBackground, urlOverlay) {
+
+	const bufferBackground = await load(urlBackground)
+	const bufferOverlay = await load(urlOverlay)
+
+	const processedImage = imageProcessor.overlay(bufferBackground, bufferOverlay)
+
+	return processedImage
+}
+
+
+module.exports.overlayBuffer = async function overlayBuffer(bufferBackground, urlOverlay) {
+	
+	const bufferOverlay = await load(urlOverlay)
+
+	const processedImage = imageProcessor.overlay(bufferBackground, bufferOverlay)
+
+	return processedImage
+}
+
+
+
 module.exports.addOpacity = async function addOpacity(url, opacity) {
 	const imageBuffer = await load(url)
 	const processedImage = imageProcessor.opacity(imageBuffer, opacity)
@@ -29,9 +51,6 @@ module.exports.addOpacity = async function addOpacity(url, opacity) {
 
 
 
-module.exports.overlay = async function addOpacity(backgroundImage, overlayImage) {
-
-}
 
 
 

@@ -133,14 +133,22 @@ async function move(imgTL, imgTR, imgBR, imgBL, xOffset, yOffset) {
 	const resultImage4 = await sharp(resultImage3)	
 	.composite([{ input: bL, gravity: 'southwest' }])
 	.toBuffer()
-
-	//console.log("0")
 	
 	return await resultImage4
 }
 
 
 
+
+
+module.exports.overlay = async function overlay(bufferBackground, bufferOverlay) {
+
+	const resultImage = await sharp(bufferBackground)	
+	.composite([{ input: bufferOverlay, gravity: 'centre' }])
+	.toBuffer()	
+
+	return await resultImage 
+}
 
 
 

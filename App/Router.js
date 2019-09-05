@@ -31,26 +31,12 @@ app.get( '/', async ( req, res, next ) => {
 
 app.post( '/move', async ( req, res, next ) => {
 
-    // const urlTL = 'https://a.tile.thunderforest.com/outdoors/10/618/319.png'
-    // const urlTR = 'https://a.tile.thunderforest.com/outdoors/10/619/319.png'
-    // const urlBR = 'https://a.tile.thunderforest.com/outdoors/10/619/320.png'
-    // const urlBL = 'https://a.tile.thunderforest.com/outdoors/10/618/320.png'
-    // const xOffset = 100
-    // const yOffset = 120
-
     const urlTL = req.body.urlTL
     const urlTR = req.body.urlTR
     const urlBR = req.body.urlBR
     const urlBL = req.body.urlBL
     const xOffset = req.body.xOffset
     const yOffset = req.body.yOffset
-
-    console.log(urlTL)
-    console.log(urlTR)
-    console.log(urlBR)
-    console.log(urlBL)
-    console.log(xOffset)
-    console.log(yOffset)
 
     if ( !urlTL ) return next( error( 400, 'No urlTL paramerer' ) )
     if ( !urlTR ) return next( error( 400, 'No urlTR paramerer' ) )
@@ -64,6 +50,53 @@ app.post( '/move', async ( req, res, next ) => {
     makeResponseFrom(resultImage, res)
 })
 
+
+
+
+app.post( '/overlay', async ( req, res, next ) => {
+
+    const backgroundUrl = req.body.backgroundUrl
+    const overlayUrl = req.body.overlayUrl
+
+    if ( !backgroundUrl ) return next( error( 400, 'No backgroundUrl paramerer' ) )
+    if ( !overlayUrl ) return next( error( 400, 'No overlayUrl paramerer' ) )
+    
+    //const backgroundUrl = 'https://1.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/10/619/318/256/png8?app_id=xWVIueSv6JL0aJ5xqTxb&app_code=djPZyynKsbTjIUDOBcHZ2g&lg=rus&ppi=72&pview=RUS'
+    //const overlayUrl = 'http://tiles.traffic.cit.api.here.com/traffic/6.0/tiles/10/619/318/256/png8?app_id=xWVIueSv6JL0aJ5xqTxb&app_code=djPZyynKsbTjIUDOBcHZ2g'
+
+    const resultImage = await facade.overlay(backgroundUrl, overlayUrl)
+
+    makeResponseFrom(resultImage, res)
+
+})
+
+
+app.post( '/move_and_overlay', async ( req, res, next ) => {
+
+    const urlTL = req.body.urlTL
+    const urlTR = req.body.urlTR
+    const urlBR = req.body.urlBR
+    const urlBL = req.body.urlBL
+    const xOffset = req.body.xOffset
+    const yOffset = req.body.yOffset
+    const overlayUrl = req.body.overlayUrl
+
+    if ( !urlTL ) return next( error( 400, 'No urlTL paramerer' ) )
+    if ( !urlTR ) return next( error( 400, 'No urlTR paramerer' ) )
+    if ( !urlBR ) return next( error( 400, 'No urlBR paramerer' ) )
+    if ( !urlBL ) return next( error( 400, 'No urlBL paramerer' ) )
+    if ( !isInt( xOffset ) ) return next( error( 400, 'No xOffset paramerer' ) )
+    if ( !isInt( yOffset ) ) return next( error( 400, 'No yOffset paramerer' ) )  
+    if ( !overlayUrl ) return next( error( 400, 'No overlayUrl paramerer' ) )
+    
+    
+    const moverBackgroundImage = await facade.move(urlTL, urlTR, urlBR, urlBL, parseInt(xOffset), parseInt(yOffset))
+
+    const resultImage = await facade.overlayBuffer(moverBackgroundImage, overlayUrl)
+
+    makeResponseFrom(resultImage, res)
+
+})
 
 
 
@@ -86,184 +119,21 @@ app.get( '/opacity', async ( req, res, next ) => {
 
 
 function makeResponseFrom(buffer, res) {
-
+    
     res.writeHead( 200, {
       'Content-Type': 'image/png',
       'Content-Length': buffer.length
     })
-
+    
     res.end(buffer)
 }
 
 
-
-
-
-app.get( '/test', async ( req, res, next ) => {
-
-    const imageBuffer = await webHandler.getContent('https://cdn.iconscout.com/icon/free/png-256/nodejs-6-569582.png')
-
-    let processedImage = await imageProcessor.testFilter(imageBuffer)
-
-  	res.writeHead( 200, {
-      'Content-Type': 'image/png',
-      'Content-Length': processedImage.length
-    })
-
-    res.end(processedImage)
-
-})
-
-
-app.get( '/test1', async ( req, res, next ) => {
-
-    obj = { my: "Special", variable: 42 };
-
-    cacheHandler.save("myname", obj)
-
-    res.end("test1")
-
-})
-
-
-app.get( '/test2', async ( req, res, next ) => {
-
-    const obj = cacheHandler.load("myname")
-
-    console.log(obj)
-
-    //res.end(obj)
-
-    res.end("test2")
-
-})
-
-
-app.get( '/test3', async ( req, res, next ) => {
-
-    const url = "https://tile.openstreetmap.org/13/4722/2633.png"
-
-    const label = await facade.test(url)
-    console.log(label)
-
-    res.end(label)
-
-})
-
-
-
-
-
-/*
-
-// Основной метод Mapshooter
-app.get( '/:mode/:x/:y/:z/:minZ', async ( req, res, next ) => {
-
-  const x = req.params.x
-  const y = req.params.y
-  const z = req.params.z
-  const minZ = req.params.minZ
-  const scriptName = req.query.script
-
-  var moduleName, defaultUrl, maxZ, params, jsonResult, imageBuffer
-
-  if ( !isInt( x )) return next( error( 400, 'X must must be Intager' ))
-  if ( !isInt( y )) return next( error( 400, 'Y must must be Intager' ))
-  if ( !isInt( z )) return next( error( 400, 'Z must must be Intager' ))
-  if ( !isInt( minZ )) return next( error( 400, 'MinimalZoom must must be Intager' ))
-  if ( !scriptName ) return next( error( 400, 'No script paramerer' ) )
-
-  // Выбираем режим обработки карты
-  switch ( req.params.mode ) {
-
-    case 'overpass':
-      maxZ = 18
-      patchToModule = '../Modes/Overpass'
-      params = { x: x, y: y, z: z, minZ: minZ, maxZ: maxZ, scriptName: scriptName, patchToModule: patchToModule}
-      jsonResult = await workersPool.exec(params)
-      sendResponse(jsonResult, res)
-      break
-
-    case 'nakarte':
-      maxZ = 18
-      patchToModule = '../Modes/Nakarte'
-      params = { x: x, y: y, z: z, minZ: minZ, maxZ: maxZ, scriptName: scriptName, patchToModule: patchToModule}
-      jsonResult = await workersPool.exec(params)
-      sendResponse(jsonResult, res)
-      break
-
-    case 'waze':
-      maxZ = 18
-      patchToModule = '../Modes/Waze'
-      params = { x: x, y: y, z: z, minZ: minZ, maxZ: maxZ, scriptName: scriptName, patchToModule: patchToModule}
-      jsonResult = await workersPool.exec(params)
-      sendResponse(jsonResult, res)
-      break
-
-    case 'yandex':
-      maxZ = 18
-      patchToModule = '../Modes/Yandex'
-      params = { x: x, y: y, z: z, minZ: minZ, maxZ: maxZ, scriptName: scriptName, patchToModule: patchToModule}
-      jsonResult = await workersPool.exec(params)
-      sendResponse(jsonResult, res)
-      break
-
-    default:
-      next( error( 400, 'Unknown mode value' ) )
-      break
-  }
-})
-
-
-
-// Вспомогательные функции
-
-function sendResponse(jsonResult, res) {
-    switch ( jsonResult.status ) {
-
-      case 'Screenshot':
-        imageBuffer = Buffer.from( jsonResult.value, 'base64' )
-        res.writeHead( 200, {
-          'Content-Type': 'image/png',
-          'Content-Length': imageBuffer.length
-        })
-        res.end( imageBuffer )
-        break
-
-      case 'Redirect':
-        res.redirect(jsonResult.value)
-        break
-
-      case 'Error':
-        res.writeHead( 200, {'Content-Type': 'text/plain'})
-        res.end( jsonResult.value )
-        break
-
-      default:
-        next( error( 501, 'Unknown jsonResult status' ) )
-        break
-      }
-}
-
-
 function isInt( value ) {
   var x = parseFloat( value )
   return !isNaN( value ) && ( x | 0 ) === x
 }
 
-
-function error( status, msg ) {
-  var err = new Error( msg )
-  err.status = status
-  return err
-}
-
-*/
-
-function isInt( value ) {
-  var x = parseFloat( value )
-  return !isNaN( value ) && ( x | 0 ) === x
-}
 
 function error( status, msg ) {
   var err = new Error( msg )

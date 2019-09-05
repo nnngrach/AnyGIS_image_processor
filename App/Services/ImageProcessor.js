@@ -1,4 +1,5 @@
 const sharp = require('sharp');
+var Jimp = require('jimp');
 
 
 module.exports.move = async function move(imgTL, imgTR, imgBR, imgBL, xOffset, yOffset) {
@@ -152,23 +153,15 @@ module.exports.overlay = async function overlay(bufferBackground, bufferOverlay)
 
 
 
-// not working
 
 module.exports.opacity = async function opacity(imageBuffer, value) {
 
-	//meta = await imageBuffer.metadata(); 
-
-
-	img = await imageBuffer.joinChannel(Buffer.alloc(200 * 200, 255), {
-		raw: {
-			width: 200,
-			height: 200,
-			channels: 1
-		}
-	})
-	.toBuffer()
-
-	return img 
+	return Jimp.read(imageBuffer)
+	  .then(image => {
+	    // Do stuff with the image.
+	    image.opacity( value );
+	    return image.getBufferAsync(Jimp.MIME_PNG);
+	  })
 }
 
 

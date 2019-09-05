@@ -103,13 +103,13 @@ app.post( '/move_and_overlay', async ( req, res, next ) => {
 
 app.get( '/opacity', async ( req, res, next ) => {
 
-    const url = 'https://cdn.iconscout.com/icon/free/png-256/nodejs-6-569582.png'
-    const value = 50
+    //const url = 'https://cdn.iconscout.com/icon/free/png-256/nodejs-6-569582.png'
+    const url = 'http://tiles.traffic.cit.api.here.com/traffic/6.0/tiles/10/619/318/256/png8?app_id=xWVIueSv6JL0aJ5xqTxb&app_code=djPZyynKsbTjIUDOBcHZ2g'
+    const value = 0.5
 
     const resultImage = await facade.addOpacity(url, value)
 
     makeResponseFrom(resultImage, res)
-
 })
 
 

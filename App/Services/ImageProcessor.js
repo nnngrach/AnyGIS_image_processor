@@ -35,7 +35,7 @@ async function moveVerticaly(imgTop, imageBottom, yOffset) {
 	    width: 256,
 	    height: 256,
 	    channels: 4,
-	    background: { r: 0, g: 0, b: 0, alpha: 0.9 }
+	    background: { r: 0, g: 0, b: 0, alpha: 0.0 }
 	  }
 	})	
 	.png()
@@ -70,7 +70,7 @@ async function moveHorizontaly(imgLeft, imageRight, xOffset) {
 	    width: 256,
 	    height: 256,
 	    channels: 4,
-	    background: { r: 0, g: 0, b: 0, alpha: 0.9 }
+	    background: { r: 0, g: 0, b: 0, alpha: 0.0 }
 	  }
 	})	
 	.png()
@@ -115,7 +115,7 @@ async function move(imgTL, imgTR, imgBR, imgBL, xOffset, yOffset) {
 	    width: 256,
 	    height: 256,
 	    channels: 4,
-	    background: { r: 0, g: 0, b: 0, alpha: 0.9 }
+	    background: { r: 0, g: 0, b: 0, alpha: 0.0 }
 	  }
 	})	
 	.png()

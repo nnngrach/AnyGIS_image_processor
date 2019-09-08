@@ -2,10 +2,7 @@ const webHandler = require('./Services/WebHandler')
 const cacheNamer = require('./Services/CacheNamer')
 const cacheHandler = require('./Services/CacheHandler')
 const imageProcessor = require('./Services/ImageProcessor')
-const imageProcessor2 = require('./Services/ImageProcessor2')
 
-
-// work
 
 module.exports.move = async function move(urlTL, urlTR, urlBR, urlBL, xOffset, yOffset) {
 	const imgTL = await load(urlTL)
@@ -18,15 +15,12 @@ module.exports.move = async function move(urlTL, urlTR, urlBR, urlBL, xOffset, y
 }
 
 
-// not work
-
 module.exports.overlay = async function overlay(urlBackground, urlOverlay) {
 
 	const bufferBackground = await load(urlBackground)
 	const bufferOverlay = await load(urlOverlay)
 
 	const processedImage = imageProcessor.overlay(bufferBackground, bufferOverlay)
-
 	return processedImage
 }
 
@@ -36,35 +30,24 @@ module.exports.overlayBuffer = async function overlayBuffer(bufferBackground, ur
 	const bufferOverlay = await load(urlOverlay)
 
 	const processedImage = imageProcessor.overlay(bufferBackground, bufferOverlay)
-
 	return processedImage
 }
-
 
 
 module.exports.addOpacity = async function addOpacity(url, opacity) {
 	const imageBuffer = await load(url)
-	const processedImage = imageProcessor.opacity(imageBuffer, opacity)
 
+	const processedImage = imageProcessor.opacity(imageBuffer, opacity)
 	return processedImage
 }
 
 
 
+module.exports.writeText = async function writeText(message) {
 
-
-
-
-
-
-
-
-module.exports.writeText = async function writeText(text) {
-
+	return imageProcessor.writeText(message)
 }
 
-
-// work
 
 async function load(url) {
 
@@ -81,8 +64,3 @@ async function load(url) {
 
 	return loadedObject.data
 }
-
-
-// module.exports.test = async function test(url) {
-// 	return cacheNamer.convert(url)
-// }

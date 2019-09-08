@@ -1,1 +1,0 @@
-// for opacity and text creating

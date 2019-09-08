@@ -28,7 +28,6 @@ app.get( '/', async ( req, res, next ) => {
 })
 
 
-
 app.post( '/move', async ( req, res, next ) => {
 
     const urlTL = req.body.urlTL
@@ -49,8 +48,6 @@ app.post( '/move', async ( req, res, next ) => {
 
     makeResponseFrom(resultImage, res)
 })
-
-
 
 
 app.post( '/overlay', async ( req, res, next ) => {
@@ -86,16 +83,12 @@ app.post( '/move_and_overlay', async ( req, res, next ) => {
     if ( !isNumber( xOffset ) ) return next( error( 400, 'No xOffset paramerer' ) )
     if ( !isNumber( yOffset ) ) return next( error( 400, 'No yOffset paramerer' ) )  
     if ( !overlayUrl ) return next( error( 400, 'No overlayUrl paramerer' ) )
-    
-    
+     
     const moverBackgroundImage = await facade.move(urlTL, urlTR, urlBR, urlBL, parseInt(xOffset), parseInt(yOffset))
-
     const resultImage = await facade.overlayBuffer(moverBackgroundImage, overlayUrl)
 
     makeResponseFrom(resultImage, res)
-
 })
-
 
 
 
@@ -113,9 +106,19 @@ app.post( '/opacity/', async ( req, res, next ) => {
 
 
 
+app.post( '/text/', async ( req, res, next ) => {
+
+    const message = req.body.message
+    if ( !message ) return next( error( 400, 'No message paramerer' ) )
+
+    const resultImage = await facade.writeText(message)
+
+    makeResponseFrom(resultImage, res)
+})
 
 
 
+// Supporting functions:
 
 function makeResponseFrom(buffer, res) {
     

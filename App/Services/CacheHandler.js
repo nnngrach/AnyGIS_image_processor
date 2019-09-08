@@ -1,8 +1,7 @@
 const NodeCache = require( "node-cache" )
 
-//const storingTime = 60 //seconds
 const storingTime = 3600 // 1 hour in seconds
-//const storingTime = 86400 // 1 day in seconds
+
 
 const myCache = new NodeCache( { stdTTL: storingTime, checkperiod: storingTime + 60 } )
 

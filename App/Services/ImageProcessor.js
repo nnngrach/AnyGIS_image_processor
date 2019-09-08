@@ -158,7 +158,6 @@ module.exports.opacity = async function opacity(imageBuffer, value) {
 
 	return Jimp.read(imageBuffer)
 	  .then(image => {
-	    // Do stuff with the image.
 	    image.opacity( value );
 	    return image.getBufferAsync(Jimp.MIME_PNG);
 	  })
@@ -166,14 +165,35 @@ module.exports.opacity = async function opacity(imageBuffer, value) {
 
 
 
+module.exports.writeText = async function writeText(message) {
 
-module.exports.testFilter = function testFilter(imageBuffer) {
-	
-	let result = sharp(imageBuffer)
-		.resize(900, 900)
-		.toBuffer()
+	const fileName = './App/Resources/osm_tile_grid.png';
+	const fontName = './App/Resources/Fipps-Regular.otf';
+	//const font = Jimp.FONT_SANS_16_BLACK
+	const font = Jimp.FONT_SANS_16_WHITE
+	var loadedImage;
 
-  	return result  
+	return Jimp.read(fileName)
+	    .then(function (image) {
+	        loadedImage = image;
+	        return Jimp.loadFont(font);
+	    })
+	    .then(function (font) {
+	        loadedImage.print(
+	        	font, 
+	        	0, 
+	        	0, 
+	        	{
+      				text: message,
+      				alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+      				alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+    			},
+    			256,
+    			256
+    			)
+	        return loadedImage.getBufferAsync(Jimp.MIME_PNG);
+	    })
+	    .catch(function (err) {
+	        console.error(err);
+	    });
 }
-
-

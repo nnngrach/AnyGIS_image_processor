@@ -165,18 +165,27 @@ module.exports.opacity = async function opacity(imageBuffer, value) {
 
 
 
-module.exports.writeText = async function writeText(message) {
+module.exports.writeText = async function writeText(message, isWhite) {
 
-	const fileName = './App/Resources/osm_tile_grid.png';
-	const fontName = './App/Resources/Fipps-Regular.otf';
-	//const font = Jimp.FONT_SANS_16_BLACK
-	const font = Jimp.FONT_SANS_16_WHITE
-	var loadedImage;
+	const fileName = './App/Resources/osm_tile_grid.png'
+
+	console.log(isWhite)
+
+	var loadedImage
+	var font
+
+	if (isWhite == 'true') {
+		font = Jimp.FONT_SANS_16_WHITE
+	} else {
+		font = Jimp.FONT_SANS_16_BLACK
+	}
+
+	
 
 	return Jimp.read(fileName)
 	    .then(function (image) {
 	        loadedImage = image;
-	        return Jimp.loadFont(font);
+	        return Jimp.loadFont(font)
 	    })
 	    .then(function (font) {
 	        loadedImage.print(
@@ -191,9 +200,9 @@ module.exports.writeText = async function writeText(message) {
     			256,
     			256
     			)
-	        return loadedImage.getBufferAsync(Jimp.MIME_PNG);
+	        return loadedImage.getBufferAsync(Jimp.MIME_PNG)
 	    })
 	    .catch(function (err) {
-	        console.error(err);
-	    });
+	        console.error(err)
+	    })
 }

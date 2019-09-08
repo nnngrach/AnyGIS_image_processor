@@ -43,9 +43,9 @@ module.exports.addOpacity = async function addOpacity(url, opacity) {
 
 
 
-module.exports.writeText = async function writeText(message) {
+module.exports.writeText = async function writeText(message, isWhite) {
 
-	return imageProcessor.writeText(message)
+	return imageProcessor.writeText(message, isWhite)
 }
 
 

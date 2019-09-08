@@ -109,9 +109,11 @@ app.post( '/opacity/', async ( req, res, next ) => {
 app.post( '/text/', async ( req, res, next ) => {
 
     const message = req.body.message
+    const isWhite = req.body.isWhite
     if ( !message ) return next( error( 400, 'No message paramerer' ) )
+    if ( !isWhite ) return next( error( 400, 'No isWhite paramerer' ) )
 
-    const resultImage = await facade.writeText(message)
+    const resultImage = await facade.writeText(message, isWhite)
 
     makeResponseFrom(resultImage, res)
 })

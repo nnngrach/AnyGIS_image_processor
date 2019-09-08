@@ -42,8 +42,8 @@ app.post( '/move', async ( req, res, next ) => {
     if ( !urlTR ) return next( error( 400, 'No urlTR paramerer' ) )
     if ( !urlBR ) return next( error( 400, 'No urlBR paramerer' ) )
     if ( !urlBL ) return next( error( 400, 'No urlBL paramerer' ) )
-    if ( !isInt( xOffset ) ) return next( error( 400, 'No xOffset paramerer' ) )
-    if ( !isInt( yOffset ) ) return next( error( 400, 'No yOffset paramerer' ) )  
+    if ( !isNumber( xOffset ) ) return next( error( 400, 'No xOffset paramerer' ) )
+    if ( !isNumber( yOffset ) ) return next( error( 400, 'No yOffset paramerer' ) )  
 
     const resultImage = await facade.move(urlTL, urlTR, urlBR, urlBL, parseInt(xOffset), parseInt(yOffset))
 
@@ -61,14 +61,12 @@ app.post( '/overlay', async ( req, res, next ) => {
     if ( !backgroundUrl ) return next( error( 400, 'No backgroundUrl paramerer' ) )
     if ( !overlayUrl ) return next( error( 400, 'No overlayUrl paramerer' ) )
     
-    //const backgroundUrl = 'https://1.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/10/619/318/256/png8?app_id=xWVIueSv6JL0aJ5xqTxb&app_code=djPZyynKsbTjIUDOBcHZ2g&lg=rus&ppi=72&pview=RUS'
-    //const overlayUrl = 'http://tiles.traffic.cit.api.here.com/traffic/6.0/tiles/10/619/318/256/png8?app_id=xWVIueSv6JL0aJ5xqTxb&app_code=djPZyynKsbTjIUDOBcHZ2g'
-
     const resultImage = await facade.overlay(backgroundUrl, overlayUrl)
 
     makeResponseFrom(resultImage, res)
 
 })
+
 
 
 app.post( '/move_and_overlay', async ( req, res, next ) => {
@@ -85,8 +83,8 @@ app.post( '/move_and_overlay', async ( req, res, next ) => {
     if ( !urlTR ) return next( error( 400, 'No urlTR paramerer' ) )
     if ( !urlBR ) return next( error( 400, 'No urlBR paramerer' ) )
     if ( !urlBL ) return next( error( 400, 'No urlBL paramerer' ) )
-    if ( !isInt( xOffset ) ) return next( error( 400, 'No xOffset paramerer' ) )
-    if ( !isInt( yOffset ) ) return next( error( 400, 'No yOffset paramerer' ) )  
+    if ( !isNumber( xOffset ) ) return next( error( 400, 'No xOffset paramerer' ) )
+    if ( !isNumber( yOffset ) ) return next( error( 400, 'No yOffset paramerer' ) )  
     if ( !overlayUrl ) return next( error( 400, 'No overlayUrl paramerer' ) )
     
     
@@ -101,13 +99,14 @@ app.post( '/move_and_overlay', async ( req, res, next ) => {
 
 
 
-app.get( '/opacity', async ( req, res, next ) => {
+app.post( '/opacity/', async ( req, res, next ) => {
 
-    //const url = 'https://cdn.iconscout.com/icon/free/png-256/nodejs-6-569582.png'
-    const url = 'http://tiles.traffic.cit.api.here.com/traffic/6.0/tiles/10/619/318/256/png8?app_id=xWVIueSv6JL0aJ5xqTxb&app_code=djPZyynKsbTjIUDOBcHZ2g'
-    const value = 0.5
+    const url = req.body.url
+    const value = req.body.value
+    if ( !url ) return next( error( 400, 'No url paramerer' ) )
+    if ( !value ) return next( error( 400, 'No value paramerer' ) )
 
-    const resultImage = await facade.addOpacity(url, value)
+    const resultImage = await facade.addOpacity(url, parseFloat(value))
 
     makeResponseFrom(resultImage, res)
 })
@@ -129,7 +128,7 @@ function makeResponseFrom(buffer, res) {
 }
 
 
-function isInt( value ) {
+function isNumber( value ) {
   var x = parseFloat( value )
   return !isNaN( value ) && ( x | 0 ) === x
 }

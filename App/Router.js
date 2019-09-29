@@ -45,8 +45,9 @@ app.post( '/move', async ( req, res, next ) => {
     if ( !isNumber( yOffset ) ) return next( error( 400, 'No yOffset paramerer' ) )  
 
     const resultImage = await facade.move(urlTL, urlTR, urlBR, urlBL, parseInt(xOffset), parseInt(yOffset))
-
+    
     makeResponseFrom(resultImage, res)
+ 
 })
 
 
@@ -100,7 +101,7 @@ app.post( '/opacity/', async ( req, res, next ) => {
     if ( !value ) return next( error( 400, 'No value paramerer' ) )
 
     const resultImage = await facade.addOpacity(url, parseFloat(value))
-
+ 
     makeResponseFrom(resultImage, res)
 })
 
@@ -122,15 +123,26 @@ app.post( '/text/', async ( req, res, next ) => {
 
 // Supporting functions:
 
-function makeResponseFrom(buffer, res) {
+function makeResponseFrom(result, res) {
+
+    if (result.isError) {
+
+        return next( error( 500, 'Error with downloading tile' ) )
+
+    } else {
+
+        const imageBuffer = result.data
+
+        res.writeHead( 200, {
+        'Content-Type': 'image/png',
+        'Content-Length': imageBuffer.length
+        })
     
-    res.writeHead( 200, {
-      'Content-Type': 'image/png',
-      'Content-Length': buffer.length
-    })
-    
-    res.end(buffer)
+        return res.end(imageBuffer)
+    }    
 }
+
+
 
 
 function isNumber( value ) {

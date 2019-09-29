@@ -10,8 +10,12 @@ module.exports.move = async function move(urlTL, urlTR, urlBR, urlBL, xOffset, y
 	const imgBR = await load(urlBR)
 	const imgBL = await load(urlBL)
 
+	if (imgTL.isError || imgTR.isError || imgBR.isError || imgBL.isError) {
+		return {isError: true, data: ""}
+	}
+
 	const processedImage = await imageProcessor.move(imgTL, imgTR, imgBR, imgBL, xOffset, yOffset)
-	return processedImage
+	return {isError: false, data: processedImage} 
 }
 
 
@@ -20,8 +24,12 @@ module.exports.overlay = async function overlay(urlBackground, urlOverlay) {
 	const bufferBackground = await load(urlBackground)
 	const bufferOverlay = await load(urlOverlay)
 
-	const processedImage = imageProcessor.overlay(bufferBackground, bufferOverlay)
-	return processedImage
+	if (bufferBackground.isError || bufferOverlay.isError) {
+		return {isError: true, data: ""}
+	}
+
+	const processedImage = await imageProcessor.overlay(bufferBackground, bufferOverlay)
+	return {isError: false, data: processedImage}
 }
 
 
@@ -29,38 +37,61 @@ module.exports.overlayBuffer = async function overlayBuffer(bufferBackground, ur
 	
 	const bufferOverlay = await load(urlOverlay)
 
-	const processedImage = imageProcessor.overlay(bufferBackground, bufferOverlay)
-	return processedImage
+	if (bufferOverlay.isError) {
+		return {isError: true, data: ""}
+	}
+
+	const processedImage = await imageProcessor.overlay(bufferBackground, bufferOverlay)
+	return {isError: false, data: processedImage}
 }
 
 
 module.exports.addOpacity = async function addOpacity(url, opacity) {
+	
 	const imageBuffer = await load(url)
 
-	const processedImage = imageProcessor.opacity(imageBuffer, opacity)
-	return processedImage
+	if (imageBuffer.isError) {
+		return {isError: true, data: ""}
+	}
+
+	const processedImage = await imageProcessor.opacity(imageBuffer.data, opacity)
+	return {isError: false, data: processedImage}
 }
 
 
 
 module.exports.writeText = async function writeText(message, isWhite) {
 
-	return imageProcessor.writeText(message, isWhite)
+	const processedImage = await imageProcessor.writeText(message, isWhite)
+	return {isError: false, data: processedImage}
 }
+
+
 
 
 async function load(url) {
 
 	const cacheName = cacheNamer.convert(url)
 
-	var loadedObject = await cacheHandler.load(cacheName)
+	const cachedObject = await cacheHandler.load(cacheName)
 	
-	if (loadedObject.isError == true) {
 
-		const buffer = await webHandler.getContent(url)
-		loadedObject = await {isError: false, data: buffer}
-		await cacheHandler.save(cacheName, buffer)
+	if (cachedObject.isError != true) {
+
+		return cachedObject
+
+	} else {
+
+		const downloadedObject = await webHandler.getContent(url)
+
+		if (downloadedObject.isError != true) {
+
+			await cacheHandler.save(cacheName, downloadedObject)
+			return downloadedObject
+			
+		} else {
+
+			return {isError: false, data: buffer}
+		}	
 	}
-
-	return loadedObject.data
 }

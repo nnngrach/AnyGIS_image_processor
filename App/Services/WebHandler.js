@@ -3,7 +3,24 @@ const axios = require('axios')
 
 module.exports.getContent = async function getContent(url) {
 
-	const response = await axios.get(url, {responseType: 'arraybuffer'})
-	const buffer = Buffer.from( response.data, 'base64' )
-	return buffer
+	return await axios
+		.get(url, {responseType: 'arraybuffer'})
+
+		// handle success
+		.then(function (response) {
+			const buffer = Buffer.from( response.data, 'base64' )
+			return { isError: false, data: buffer}
+		})
+
+		// handle error
+		.catch(function (error) {		
+			console.log(error)
+			return { isError: true, data: ""}
+		})
+		
+		// always executed
+		.finally(function () {
+			// nothing yet
+		})
+	
 }

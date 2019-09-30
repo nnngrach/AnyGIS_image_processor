@@ -42,7 +42,7 @@ app.post( '/move', async ( req, res, next ) => {
     if ( !urlBR ) return next( error( 400, 'No urlBR paramerer' ) )
     if ( !urlBL ) return next( error( 400, 'No urlBL paramerer' ) )
     if ( !isNumber( xOffset ) ) return next( error( 400, 'No xOffset paramerer' ) )
-    if ( !isNumber( yOffset ) ) return next( error( 400, 'No yOffset paramerer' ) )  
+    if ( !isNumber( yOffset ) ) return next( error( 400, 'No yOffset paramerer' ) )
 
     const resultImage = await facade.move(urlTL, urlTR, urlBR, urlBL, parseInt(xOffset), parseInt(yOffset))
     

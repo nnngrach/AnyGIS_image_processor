@@ -14,7 +14,12 @@ module.exports.move = async function move(urlTL, urlTR, urlBR, urlBL, xOffset, y
 		return {isError: true, data: ""}
 	}
 
-	const processedImage = await imageProcessor.move(imgTL, imgTR, imgBR, imgBL, xOffset, yOffset)
+	const processedImage = await imageProcessor.move(imgTL.data, 
+													imgTR.data, 
+													imgBR.data, 
+													imgBL.data, 
+													xOffset, 
+													yOffset)
 	return {isError: false, data: processedImage} 
 }
 
@@ -28,7 +33,7 @@ module.exports.overlay = async function overlay(urlBackground, urlOverlay) {
 		return {isError: true, data: ""}
 	}
 
-	const processedImage = await imageProcessor.overlay(bufferBackground, bufferOverlay)
+	const processedImage = await imageProcessor.overlay(bufferBackground.data, bufferOverlay.data)
 	return {isError: false, data: processedImage}
 }
 
@@ -41,7 +46,7 @@ module.exports.overlayBuffer = async function overlayBuffer(bufferBackground, ur
 		return {isError: true, data: ""}
 	}
 
-	const processedImage = await imageProcessor.overlay(bufferBackground, bufferOverlay)
+	const processedImage = await imageProcessor.overlay(bufferBackground.data, bufferOverlay.data)
 	return {isError: false, data: processedImage}
 }
 
@@ -75,10 +80,10 @@ async function load(url) {
 
 	const cachedObject = await cacheHandler.load(cacheName)
 	
-
+	
 	if (cachedObject.isError != true) {
 
-		return cachedObject
+		return cachedObject.data
 
 	} else {
 

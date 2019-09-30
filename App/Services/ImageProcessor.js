@@ -169,8 +169,6 @@ module.exports.writeText = async function writeText(message, isWhite) {
 
 	const fileName = './App/Resources/osm_tile_grid.png'
 
-	console.log(isWhite)
-
 	var loadedImage
 	var font
 

@@ -14,7 +14,8 @@ module.exports.getContent = async function getContent(url) {
 
 		// handle error
 		.catch(function (error) {		
-			console.log(error)
+			//console.log(error)
+			console.log('Download error - ', url)
 			return { isError: true, data: ""}
 		})
 		

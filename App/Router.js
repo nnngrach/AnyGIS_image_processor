@@ -47,7 +47,7 @@ app.post( '/move', async ( req, res, next ) => {
 
     const resultImage = await facade.move(urlTL, urlTR, urlBR, urlBL, parseInt(xOffset), parseInt(yOffset))
     
-    makeResponseFrom(resultImage, res)
+    makeResponseFrom(resultImage, res, next)
  
 })
 
@@ -62,13 +62,13 @@ app.post( '/overlay', async ( req, res, next ) => {
     
     const resultImage = await facade.overlay(backgroundUrl, overlayUrl)
 
-    makeResponseFrom(resultImage, res)
+    makeResponseFrom(resultImage, res, next)
 
 })
 
 
 
-app.post( '/move_and_overlay', async ( req, res, next ) => {
+app.post( '/move_background_and_overlay', async ( req, res, next ) => {
 
     const urlTL = req.body.urlTL
     const urlTR = req.body.urlTR
@@ -89,7 +89,7 @@ app.post( '/move_and_overlay', async ( req, res, next ) => {
     const movedBackgroundImage = await facade.move(urlTL, urlTR, urlBR, urlBL, parseInt(xOffset), parseInt(yOffset))
     const resultImage = await facade.overlayBuffer(movedBackgroundImage, overlayUrl)
 
-    makeResponseFrom(resultImage, res)
+    makeResponseFrom(resultImage, res, next)
 })
 
 
@@ -103,7 +103,7 @@ app.post( '/opacity/', async ( req, res, next ) => {
 
     const resultImage = await facade.addOpacity(url, parseFloat(value))
  
-    makeResponseFrom(resultImage, res)
+    makeResponseFrom(resultImage, res, next)
 })
 
 
@@ -117,14 +117,14 @@ app.post( '/text/', async ( req, res, next ) => {
 
     const resultImage = await facade.writeText(message, isWhite)
 
-    makeResponseFrom(resultImage, res)
+    makeResponseFrom(resultImage, res, next)
 })
 
 
 
 // Supporting functions:
 
-function makeResponseFrom(result, res) {
+function makeResponseFrom(result, res, next) {
 
     if (result.isError) {
 

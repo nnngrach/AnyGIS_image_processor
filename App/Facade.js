@@ -96,7 +96,7 @@ async function load(url) {
 			
 		} else {
 
-			return {isError: false, data: buffer}
+			return {isError: true, data: ""}
 		}	
 	}
 }

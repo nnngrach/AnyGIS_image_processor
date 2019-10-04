@@ -4,12 +4,17 @@ var Jimp = require('jimp');
 
 module.exports.move = async function move(imgTL, imgTR, imgBR, imgBL, xOffset, yOffset) {
 	
-	// Sharp makes errors with 0px with or height
+	// Sharp makes errors with 0px offset value
 
-	if (xOffset == 0) {
+	if (xOffset == 0 && yOffset == 0) {
+		return imgTL
+
+	} else if (xOffset == 0) {
 		return moveVerticaly(imgTL, imgBL, yOffset)
+
 	} else if (yOffset == 0) {
 		return moveHorizontaly(imgTL, imgTR, xOffset)
+
 	} else {
 		return move(imgTL, imgTR, imgBR, imgBL, xOffset, yOffset)
 	}

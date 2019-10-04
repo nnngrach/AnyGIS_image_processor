@@ -37,6 +37,7 @@ app.post( '/move', async ( req, res, next ) => {
     const xOffset = req.body.xOffset
     const yOffset = req.body.yOffset
 
+
     if ( !urlTL ) return next( error( 400, 'No urlTL paramerer' ) )
     if ( !urlTR ) return next( error( 400, 'No urlTR paramerer' ) )
     if ( !urlBR ) return next( error( 400, 'No urlBR paramerer' ) )
@@ -85,8 +86,8 @@ app.post( '/move_and_overlay', async ( req, res, next ) => {
     if ( !isNumber( yOffset ) ) return next( error( 400, 'No yOffset paramerer' ) )  
     if ( !overlayUrl ) return next( error( 400, 'No overlayUrl paramerer' ) )
      
-    const moverBackgroundImage = await facade.move(urlTL, urlTR, urlBR, urlBL, parseInt(xOffset), parseInt(yOffset))
-    const resultImage = await facade.overlayBuffer(moverBackgroundImage, overlayUrl)
+    const movedBackgroundImage = await facade.move(urlTL, urlTR, urlBR, urlBL, parseInt(xOffset), parseInt(yOffset))
+    const resultImage = await facade.overlayBuffer(movedBackgroundImage, overlayUrl)
 
     makeResponseFrom(resultImage, res)
 })

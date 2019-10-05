@@ -68,6 +68,22 @@ app.post( '/overlay', async ( req, res, next ) => {
 
 
 
+app.post( '/addictive_overlay', async ( req, res, next ) => {
+
+    const backgroundUrl = req.body.backgroundUrl
+    const overlayUrl = req.body.overlayUrl
+
+    if ( !backgroundUrl ) return next( error( 400, 'No backgroundUrl paramerer' ) )
+    if ( !overlayUrl ) return next( error( 400, 'No overlayUrl paramerer' ) )
+
+    const resultImage = await facade.overlayScreen(backgroundUrl, overlayUrl)
+
+    makeResponseFrom(resultImage, res, next)
+
+})
+
+
+
 app.post( '/move_background_and_overlay', async ( req, res, next ) => {
 
     const urlTL = req.body.urlTL

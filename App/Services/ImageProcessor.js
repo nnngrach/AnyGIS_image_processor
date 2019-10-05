@@ -159,7 +159,40 @@ module.exports.overlay = async function overlay(bufferBackground, bufferOverlay)
 
 
 
-module.exports.opacity = async function opacity(imageBuffer, value) {
+module.exports.overlayScreen = async function overlayScreen(bufferBackground, bufferOverlay) {
+
+	const backgroundDark = await brightness(bufferBackground, 0.5)
+	const overlayDark = await brightness(bufferOverlay, 0.5)
+
+	const combinedImage = await sharp(backgroundDark)	
+	.composite([{ input: overlayDark, gravity: 'centre', blend: 'add' }])
+	.toBuffer()	
+
+	const tweakedImage = await contrast(combinedImage, 0.1)
+	
+	return await tweakedImage 
+}
+
+
+
+async function brightness(imageBuffer, value) {
+	return await sharp(imageBuffer)	
+	.modulate({brightness: value})
+	.toBuffer()
+}
+
+
+async function contrast(imageBuffer, value) {
+
+	return Jimp.read(imageBuffer)
+	  .then(image => {
+	    image.contrast( value );
+	    return image.getBufferAsync(Jimp.MIME_PNG);
+	  })
+}
+
+
+async function opacity(imageBuffer, value) {
 
 	return Jimp.read(imageBuffer)
 	  .then(image => {
@@ -167,6 +200,14 @@ module.exports.opacity = async function opacity(imageBuffer, value) {
 	    return image.getBufferAsync(Jimp.MIME_PNG);
 	  })
 }
+
+
+
+
+
+module.exports.opacity = opacity
+
+
 
 
 

@@ -38,6 +38,22 @@ module.exports.overlay = async function overlay(urlBackground, urlOverlay) {
 }
 
 
+
+module.exports.overlayScreen = async function overlayScreen(urlBackground, urlOverlay) {
+
+	const bufferBackground = await load(urlBackground)
+	const bufferOverlay = await load(urlOverlay)
+
+	if (bufferBackground.isError || bufferOverlay.isError) {
+		return {isError: true, data: ""}
+	}
+
+	const processedImage = await imageProcessor.overlayScreen(bufferBackground.data, bufferOverlay.data)
+	return {isError: false, data: processedImage}
+}
+
+
+
 module.exports.overlayBuffer = async function overlayBuffer(bufferBackground, urlOverlay) {
 	
 	const bufferOverlay = await load(urlOverlay)

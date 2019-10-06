@@ -161,16 +161,21 @@ module.exports.overlay = async function overlay(bufferBackground, bufferOverlay)
 
 module.exports.overlayScreen = async function overlayScreen(bufferBackground, bufferOverlay) {
 
-	const backgroundDark = await brightness(bufferBackground, 0.5)
-	const overlayDark = await brightness(bufferOverlay, 0.5)
+	const combinedImage = await sharp(bufferBackground)	
+	.composite([{ input: bufferOverlay, gravity: 'centre', blend: 'add' }])
+	.toBuffer()
+	return await combinedImage
 
-	const combinedImage = await sharp(backgroundDark)	
-	.composite([{ input: overlayDark, gravity: 'centre', blend: 'add' }])
-	.toBuffer()	
+	//const backgroundDark = await brightness(bufferBackground, 0.5)
+	//const overlayDark = await brightness(bufferOverlay, 0.5)
 
-	const tweakedImage = await contrast(combinedImage, 0.1)
-	
-	return await tweakedImage 
+	// const combinedImage = await sharp(backgroundDark)	
+	// .composite([{ input: overlayDark, gravity: 'centre', blend: 'add' }])
+	// .toBuffer()	
+	//return await combinedImage 
+
+	//const tweakedImage = await contrast(combinedImage, 0.1)
+	//return await combinedImage 
 }
 
 

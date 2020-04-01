@@ -1,6 +1,7 @@
 # AnyGIS_image_processor
 
-Service for tile image processing
+Service for tile image processing. It uses NodeJS with Sharp and Jimp libraries.
+
 
 ### Installation
 

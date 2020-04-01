@@ -22,28 +22,31 @@ parameters:
 
 Add text for tile image
 
-`POST http://localhost:3000/text
+```
+POST http://localhost:3000/text
 parameters:
 "message" - Text for printing in tile
 "isWhite" - 1 for white text. 0 for black
-`
+```
 
 
 Overlay tile A to tile B (default mode):
 
-`POST http://localhost:3000/overlay
+```
+POST http://localhost:3000/overlay
 parameters:
 "backgroundUrl" - URL of background tile
 "overlayUrl" - URL of foreground tile
-`
+```
 
 Overlay tile A to tile B (addictive mode)
 
-`POST http://localhost:3000/addictive_overlay
+```
+POST http://localhost:3000/addictive_overlay
 parameters:
 "backgroundUrl" - URL of background tile
 "overlayUrl" - URL of foreground tile
-`
+```
 
 
 Get tile with offset (for ellipsoid projections)
@@ -61,7 +64,8 @@ parameters:
 
 Get tile with offset and static overlay (for ellipsoid projections)
 
-`POST http://localhost:3000/move_background_and_overlay
+```
+POST http://localhost:3000/move_background_and_overlay
 parameters:
 "urlTL" - URL of top left tile
 "urlTR" - URL of top right tile
@@ -70,4 +74,4 @@ parameters:
 "xOffset" - Offset for X axis
 "yOffset" - Offset for Y axis
 "overlayUrl" - URL of foreground tile
-`
+```

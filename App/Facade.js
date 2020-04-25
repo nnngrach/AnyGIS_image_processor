@@ -4,6 +4,25 @@ const cacheHandler = require('./Services/CacheHandler')
 const imageProcessor = require('./Services/ImageProcessor')
 
 
+
+module.exports.attachRow = async function attachRow(urlLeft, urlCentral, urlRight) {
+	const imgLeft = await load(urlLeft)
+	const imgCentral = await load(urlCentral)
+	const imgRight = await load(urlRight)
+
+	if (imgLeft.isError || imgCentral.isError || imgRight.isError) {
+		return {isError: true, data: ""}
+	}
+
+	const processedImage = await imageProcessor.attachRow(
+		imgLeft.data,
+		imgCentral.data,
+		imgRight.data)
+
+	return {isError: false, data: processedImage}
+}
+
+
 module.exports.move = async function move(urlTL, urlTR, urlBR, urlBL, xOffset, yOffset) {
 	const imgTL = await load(urlTL)
 	const imgTR = await load(urlTR)

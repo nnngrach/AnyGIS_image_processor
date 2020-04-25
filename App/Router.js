@@ -138,6 +138,24 @@ app.post( '/text/', async ( req, res, next ) => {
 
 
 
+app.post( '/attach_row', async ( req, res, next ) => {
+
+    const urlLeft = req.body.urlLeft
+    const urlCentral = req.body.urlCentral
+    const urlRight = req.body.urlRight
+
+
+    if ( !urlLeft ) return next( error( 400, 'No urlTL paramerer' ) )
+    if ( !urlCentral ) return next( error( 400, 'No urlTR paramerer' ) )
+    if ( !urlRight ) return next( error( 400, 'No urlBR paramerer' ) )
+
+    const resultImage = await facade.attachRow(urlLeft, urlCentral, urlRight)
+
+    makeResponseFrom(resultImage, res, next)
+})
+
+
+
 // Supporting functions:
 
 function makeResponseFrom(result, res, next) {

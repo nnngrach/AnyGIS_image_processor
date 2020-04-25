@@ -19,7 +19,7 @@ COPY package*.json ./
 RUN npm install --ignore-scripts
 RUN npm link sharp
 RUN rm -rf node_modules/$APP/node_modules/sharp
-RUN npm install
+RUN npm install --verbose
 
 COPY . .
 

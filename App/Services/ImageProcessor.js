@@ -2,6 +2,48 @@ const sharp = require('sharp');
 var Jimp = require('jimp');
 
 
+module.exports.attachRow = async function attachRow(imgLeft, imgCentral, imgRight) {
+
+	const leftImage = await sharp(imgLeft)
+		.png()
+		.resize(256, 256)
+		.toBuffer()
+
+	const centerImage = await sharp(imgCentral)
+		.png()
+		.resize(256, 256)
+		.toBuffer()
+
+	const rightImage = await sharp(imgRight)
+		.png()
+		.resize(256, 256)
+		.toBuffer()
+
+
+	const resultImage = await sharp({
+		create: {
+			width: 768,
+			height: 256,
+			channels: 4,
+			background: { r: 0, g: 0, b: 0, alpha: 0.0 }
+		}
+	})
+		.png()
+		.composite([{ input: leftImage, gravity: 'west' }])
+		.toBuffer()
+
+	const resultImage2 = await sharp(resultImage)
+		.composite([{ input: centerImage, gravity: 'center' }])
+		.toBuffer()
+
+	const resultImage3 = await sharp(resultImage2)
+		.composite([{ input: rightImage, gravity: 'east' }])
+		.toBuffer()
+
+	return await resultImage3
+}
+
+
 module.exports.move = async function move(imgTL, imgTR, imgBR, imgBL, xOffset, yOffset) {
 	
 	// Sharp makes errors with 0px offset value
@@ -254,4 +296,9 @@ module.exports.writeText = async function writeText(message, isWhite) {
 	    .catch(function (err) {
 	        console.error(err)
 	    })
+
 }
+
+
+
+
